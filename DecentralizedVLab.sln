@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecentralizedVLab", "DecentralizedVLab\DecentralizedVLab.csproj", "{2261138D-C707-4FD3-8E67-816D5D037807}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.csproj", "{A68C5455-51F7-4088-BD84-8041A2B24200}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExecutionService", "ExecutionService\ExecutionService.csproj", "{C4512412-E0BF-46A0-BD42-C4D64D4B19E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2261138D-C707-4FD3-8E67-816D5D037807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2261138D-C707-4FD3-8E67-816D5D037807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2261138D-C707-4FD3-8E67-816D5D037807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2261138D-C707-4FD3-8E67-816D5D037807}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A68C5455-51F7-4088-BD84-8041A2B24200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A68C5455-51F7-4088-BD84-8041A2B24200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A68C5455-51F7-4088-BD84-8041A2B24200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A68C5455-51F7-4088-BD84-8041A2B24200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4512412-E0BF-46A0-BD42-C4D64D4B19E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4512412-E0BF-46A0-BD42-C4D64D4B19E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4512412-E0BF-46A0-BD42-C4D64D4B19E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4512412-E0BF-46A0-BD42-C4D64D4B19E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

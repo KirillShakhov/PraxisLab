@@ -1,0 +1,273 @@
+{
+  "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+  "title": "Библиотечная система [Парный JavaScript]",
+  "description": "Командный курс: два студента строят библиотечную систему вместе, реализуя разные модули. Лабораторные чётко помечены **[A]** и **[B]** — каждый участник берёт свою роль и выполняет только свои задания. В зависимых лабораториях вы получаете заглушку (`partner.js`) с интерфейсом модуля напарника — это ваш контракт.\n\n**Партнёр A** строит: каталог книг → выдачу книг → статистику → уведомления\n\n**Партнёр B** строит: базу пользователей → поиск книг → историю займов → рейтинг книг",
+  "authorId": "system",
+  "authorName": "DecentralizedVLab",
+  "isPublic": true,
+  "createdAt": 1745798400000,
+  "updatedAt": 1745798400000,
+  "labs": [
+    {
+      "id": "lab-js-01",
+      "title": "[A] Модуль 1: Каталог книг",
+      "description": "## Партнёр A — Задание 1\n\nВаш первый модуль — **каталог книг**. Реализуйте три функции в `solution.js`:\n\n### `addBook(books, id, title, author)`\nДобавляет книгу в массив. Каждая книга — объект `{ id, title, author }`.\n\n### `findBook(books, id)`\nВозвращает книгу по `id` или `null`, если не найдена.\n\n### `listBooks(books)`\nВозвращает массив **заголовков** всех книг, отсортированных по алфавиту.\n\n---\n*Партнёр B параллельно выполняет Задание 2 (база пользователей) — начните одновременно!*",
+      "language": "javascript",
+      "order": 0,
+      "files": [
+        {
+          "path": "solution.js",
+          "content": "// Партнёр A: реализуйте функции каталога книг\n\nfunction addBook(books, id, title, author) {\n    // Добавьте объект { id, title, author } в массив books\n}\n\nfunction findBook(books, id) {\n    // Верните книгу с данным id или null\n}\n\nfunction listBooks(books) {\n    // Верните массив title всех книг, отсортированных по алфавиту\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst books = [];\naddBook(books, 1, 'Clean Code', 'Robert Martin');\naddBook(books, 2, 'Python Tricks', 'Dan Bader');\naddBook(books, 3, 'The Pragmatic Programmer', 'Hunt and Thomas');\n\nconsole.log(books.length);\n\nconst b = findBook(books, 2);\nconsole.log(b.title);\nconsole.log(b.author);\n\nconst missing = findBook(books, 99);\nconsole.log(missing === null ? 'not found' : 'found');\n\nconst titles = listBooks(books);\ntitles.forEach(t => console.log(t));\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-01-1",
+          "description": "addBook, findBook, listBooks",
+          "input": "",
+          "expectedOutput": "3\nPython Tricks\nDan Bader\nnot found\nClean Code\nPython Tricks\nThe Pragmatic Programmer",
+          "isHidden": false
+        },
+        {
+          "id": "tc-js-01-2",
+          "description": "findBook возвращает null для несуществующей книги (скрытый)",
+          "input": "",
+          "expectedOutput": "3\nPython Tricks\nDan Bader\nnot found\nClean Code\nPython Tricks\nThe Pragmatic Programmer",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-js-02",
+      "title": "[B] Модуль 2: База пользователей",
+      "description": "## Партнёр B — Задание 2\n\nВаш первый модуль — **база пользователей**. Реализуйте три функции в `solution.js`:\n\n### `addUser(users, id, name, email)`\nДобавляет пользователя в массив. Объект: `{ id, name, email }`.\n\n### `findUser(users, id)`\nВозвращает пользователя по `id` или `null`.\n\n### `listUsers(users)`\nВозвращает массив **имён** всех пользователей, отсортированных по алфавиту.\n\n---\n*Партнёр A параллельно выполняет Задание 1 (каталог книг) — начните одновременно!*",
+      "language": "javascript",
+      "order": 1,
+      "files": [
+        {
+          "path": "solution.js",
+          "content": "// Партнёр B: реализуйте функции базы пользователей\n\nfunction addUser(users, id, name, email) {\n    // Добавьте объект { id, name, email } в массив users\n}\n\nfunction findUser(users, id) {\n    // Верните пользователя с данным id или null\n}\n\nfunction listUsers(users) {\n    // Верните массив name всех пользователей, отсортированных по алфавиту\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst users = [];\naddUser(users, 1, 'Алиса', 'alice@mail.ru');\naddUser(users, 2, 'Борис', 'boris@mail.ru');\naddUser(users, 3, 'Вера', 'vera@mail.ru');\n\nconsole.log(users.length);\n\nconst u = findUser(users, 1);\nconsole.log(u.name);\nconsole.log(u.email);\n\nconst missing = findUser(users, 99);\nconsole.log(missing === null ? 'not found' : 'found');\n\nconst names = listUsers(users);\nnames.forEach(n => console.log(n));\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-02-1",
+          "description": "addUser, findUser, listUsers",
+          "input": "",
+          "expectedOutput": "3\nАлиса\nalice@mail.ru\nnot found\nАлиса\nБорис\nВера",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-js-03",
+      "title": "[A] Модуль 3: Выдача книг",
+      "description": "## Партнёр A — Задание 3\n\nВаш второй модуль — **система выдачи книг**. Он опирается на базу пользователей Партнёра B (заглушка уже в `partner.js`).\n\nРеализуйте в `solution.js`:\n\n### `borrowBook(loans, bookId, userId, date)`\nДобавляет запись `{ bookId, userId, date, returned: false }`.\n\n### `returnBook(loans, bookId)`\nНаходит активный займ с данным `bookId` и устанавливает `returned: true`.\n\n### `getActiveLoans(loans)`\nВозвращает только займы, где `returned === false`.\n\n---\n*Дождитесь, пока Партнёр B закончит Задание 2, чтобы сверить интерфейс `addUser`/`findUser` — именно такие объекты вы будете получать в реальной интеграции.*",
+      "language": "javascript",
+      "order": 2,
+      "files": [
+        {
+          "path": "partner.js",
+          "content": "// Заглушка модуля Партнёра B (реализуется в Задании 2)\n// Не изменяйте этот файл — это контракт интерфейса\nfunction addUser(users, id, name, email) {\n    users.push({ id, name, email });\n}\nfunction findUser(users, id) {\n    return users.find(u => u.id === id) || null;\n}\nfunction listUsers(users) {\n    return users.map(u => u.name).sort();\n}\n",
+          "readOnly": true
+        },
+        {
+          "path": "solution.js",
+          "content": "// Партнёр A: система выдачи книг\n\nfunction borrowBook(loans, bookId, userId, date) {\n    // Добавьте запись о выдаче книги (returned: false)\n}\n\nfunction returnBook(loans, bookId) {\n    // Найдите активный займ с bookId и пометьте returned: true\n}\n\nfunction getActiveLoans(loans) {\n    // Верните только незакрытые займы (returned === false)\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst loans = [];\nborrowBook(loans, 101, 1, '2024-01-10');\nborrowBook(loans, 102, 2, '2024-01-11');\nborrowBook(loans, 103, 1, '2024-01-12');\n\nconsole.log(getActiveLoans(loans).length);\n\nreturnBook(loans, 102);\nconsole.log(getActiveLoans(loans).length);\n\nconst active = getActiveLoans(loans);\nconst ids = active.map(l => l.bookId).sort((a, b) => a - b);\nids.forEach(id => console.log(id));\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-03-1",
+          "description": "borrowBook, returnBook, getActiveLoans",
+          "input": "",
+          "expectedOutput": "3\n2\n101\n103",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-js-04",
+      "title": "[B] Модуль 4: Поиск книг",
+      "description": "## Партнёр B — Задание 4\n\nВаш второй модуль — **поисковые функции** по каталогу Партнёра A (заглушка в `partner.js`).\n\nРеализуйте в `solution.js`:\n\n### `countBooks(books)`\nВозвращает количество книг.\n\n### `searchByAuthor(books, author)`\nВозвращает книги с точным совпадением автора (`===`).\n\n### `searchByTitle(books, query)`\nВозвращает книги, чей `title` содержит `query` без учёта регистра (`toLowerCase()`).\n\n---\n*Дождитесь результата Задания 1 Партнёра A — ваши функции будут работать с его объектами `{ id, title, author }`.*",
+      "language": "javascript",
+      "order": 3,
+      "files": [
+        {
+          "path": "partner.js",
+          "content": "// Заглушка каталога Партнёра A (реализуется в Задании 1)\n// Не изменяйте этот файл — это контракт интерфейса\nfunction addBook(books, id, title, author) {\n    books.push({ id, title, author });\n}\nfunction findBook(books, id) {\n    return books.find(b => b.id === id) || null;\n}\nfunction listBooks(books) {\n    return books.map(b => b.title).sort();\n}\n",
+          "readOnly": true
+        },
+        {
+          "path": "solution.js",
+          "content": "// Партнёр B: поисковые функции\n\nfunction countBooks(books) {\n    // Верните количество книг в каталоге\n}\n\nfunction searchByAuthor(books, author) {\n    // Верните книги с точным совпадением author\n}\n\nfunction searchByTitle(books, query) {\n    // Верните книги, чей title содержит query (без учёта регистра)\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst books = [];\naddBook(books, 1, 'Clean Code', 'Robert Martin');\naddBook(books, 2, 'Clean Architecture', 'Robert Martin');\naddBook(books, 3, 'Python Tricks', 'Dan Bader');\naddBook(books, 4, 'Fluent Python', 'Luciano Ramalho');\n\nconsole.log(countBooks(books));\n\nconst byAuthor = searchByAuthor(books, 'Robert Martin');\nconsole.log(byAuthor.length);\nbyAuthor.sort((a, b) => a.title.localeCompare(b.title)).forEach(b => console.log(b.title));\n\nconst byTitle = searchByTitle(books, 'python');\nconsole.log(byTitle.length);\nbyTitle.sort((a, b) => a.title.localeCompare(b.title)).forEach(b => console.log(b.title));\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-04-1",
+          "description": "countBooks, searchByAuthor, searchByTitle",
+          "input": "",
+          "expectedOutput": "4\n2\nClean Architecture\nClean Code\n2\nFluent Python\nPython Tricks",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-js-05",
+      "title": "[A] Модуль 5: Статистика библиотеки",
+      "description": "## Партнёр A — Задание 5\n\nТретий модуль Партнёра A — **статистика**. Он объединяет ваш каталог с системой займов Партнёра B. Заглушка займов — в `partner.js`.\n\nРеализуйте в `solution.js`:\n\n### `getStats(books, activeLoans)`\nПринимает полный список книг и массив **активных** займов (уже отфильтрованных через `getActiveLoans`).  \nВозвращает объект:\n```js\n{ total: number, borrowed: number, available: number }\n```\n- `total` — всего книг\n- `borrowed` — книг сейчас на руках (есть в `activeLoans`)\n- `available` — `total - borrowed`\n\n---\n*Сверьте с Партнёром B структуру объекта займа `{ bookId, userId, date, returned }` — именно его вы получаете из `getActiveLoans`.*",
+      "language": "javascript",
+      "order": 4,
+      "files": [
+        {
+          "path": "partner.js",
+          "content": "// Заглушка системы займов Партнёра B (Задание 3)\n// Не изменяйте этот файл\nfunction borrowBook(loans, bookId, userId, date) {\n    loans.push({ bookId, userId, date, returned: false });\n}\nfunction returnBook(loans, bookId) {\n    const loan = loans.find(l => l.bookId === bookId && !l.returned);\n    if (loan) loan.returned = true;\n}\nfunction getActiveLoans(loans) {\n    return loans.filter(l => !l.returned);\n}\n",
+          "readOnly": true
+        },
+        {
+          "path": "solution.js",
+          "content": "// Партнёр A: статистика библиотеки\n\nfunction getStats(books, activeLoans) {\n    // Верните { total, borrowed, available }\n    // total — всего книг в каталоге\n    // borrowed — сколько книг сейчас на руках (bookId есть в activeLoans)\n    // available — total - borrowed\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst books = [\n    { id: 1, title: 'Clean Code', author: 'Robert Martin' },\n    { id: 2, title: 'Python Tricks', author: 'Dan Bader' },\n    { id: 3, title: 'Pragmatic Programmer', author: 'Hunt and Thomas' },\n    { id: 4, title: 'Fluent Python', author: 'Luciano Ramalho' },\n    { id: 5, title: 'JavaScript: The Good Parts', author: 'Douglas Crockford' },\n];\n\nconst loans = [];\nborrowBook(loans, 1, 1, '2024-01-01');\nborrowBook(loans, 3, 2, '2024-01-02');\nreturnBook(loans, 1);\nborrowBook(loans, 5, 1, '2024-01-03');\n\nconst active = getActiveLoans(loans);\nconst stats = getStats(books, active);\n\nconsole.log(stats.total);\nconsole.log(stats.borrowed);\nconsole.log(stats.available);\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-05-1",
+          "description": "getStats: total=5, borrowed=2 (книги 3 и 5), available=3",
+          "input": "",
+          "expectedOutput": "5\n2\n3",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-js-06",
+      "title": "[B] Модуль 6: История займов",
+      "description": "## Партнёр B — Задание 6\n\nТретий модуль Партнёра B — **история и аналитика займов**. Заглушка каталога Партнёра A — в `partner.js`.\n\nРеализуйте в `solution.js`:\n\n### `getUserHistory(loans, userId)`\nВозвращает все записи займов (возвращённые и активные) для данного `userId`.\n\n### `getMostBorrowed(loans)`\nВозвращает `bookId` книги с наибольшим числом займов среди всего массива.\n\n---\n*Обсудите с Партнёром A структуру объекта займа — вы используете тот же формат `{ bookId, userId, date, returned }`.*",
+      "language": "javascript",
+      "order": 5,
+      "files": [
+        {
+          "path": "partner.js",
+          "content": "// Заглушка каталога Партнёра A (Задания 1 и 5)\n// Не изменяйте этот файл\nfunction addBook(books, id, title, author) {\n    books.push({ id, title, author });\n}\nfunction findBook(books, id) {\n    return books.find(b => b.id === id) || null;\n}\nfunction listBooks(books) {\n    return books.map(b => b.title).sort();\n}\n",
+          "readOnly": true
+        },
+        {
+          "path": "solution.js",
+          "content": "// Партнёр B: история и аналитика займов\n\nfunction getUserHistory(loans, userId) {\n    // Верните все займы (возвращённые и активные) для данного userId\n}\n\nfunction getMostBorrowed(loans) {\n    // Верните bookId книги с наибольшим числом займов во всём массиве\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst loans = [\n    { bookId: 1, userId: 1, date: '2024-01-01', returned: true },\n    { bookId: 2, userId: 1, date: '2024-01-05', returned: false },\n    { bookId: 1, userId: 2, date: '2024-01-02', returned: true },\n    { bookId: 1, userId: 1, date: '2024-01-10', returned: false },\n    { bookId: 3, userId: 2, date: '2024-01-03', returned: true },\n];\n\nconst history = getUserHistory(loans, 1);\nconsole.log(history.length);\nhistory.sort((a, b) => a.bookId - b.bookId).forEach(l => console.log(l.bookId));\n\nconst most = getMostBorrowed(loans);\nconsole.log(most);\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-06-1",
+          "description": "getUserHistory (3 записи для userId=1), getMostBorrowed (книга 1 — 3 раза)",
+          "input": "",
+          "expectedOutput": "3\n1\n1\n2\n1",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-js-07",
+      "title": "[A] Модуль 7: Уведомления о просрочке",
+      "description": "## Партнёр A — Задание 7\n\nЧетвёртый модуль Партнёра A — **обнаружение просроченных займов**. `partner.js` содержит вспомогательную функцию `daysBetween`.\n\nРеализуйте в `solution.js`:\n\n### `getOverdueLoans(loans, currentDate, maxDays)`\nВозвращает займы, которые одновременно:\n- не возвращены (`returned === false`)\n- оформлены более `maxDays` дней назад (`daysBetween(loan.date, currentDate) > maxDays`)\n\nФункция `daysBetween(date1, date2)` доступна из `partner.js` (глобально). Даты в формате `'YYYY-MM-DD'`.\n\n---\n*Обсудите с Партнёром B: он в Задании 8 строит рейтинги, основанные на истории займов, которую вы оба используете.*",
+      "language": "javascript",
+      "order": 6,
+      "files": [
+        {
+          "path": "partner.js",
+          "content": "// Вспомогательные функции — не изменяйте этот файл\nfunction daysBetween(date1, date2) {\n    const d1 = new Date(date1);\n    const d2 = new Date(date2);\n    return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));\n}\n",
+          "readOnly": true
+        },
+        {
+          "path": "solution.js",
+          "content": "// Партнёр A: обнаружение просроченных займов\n\nfunction getOverdueLoans(loans, currentDate, maxDays) {\n    // Верните займы, которые:\n    // - не возвращены (returned === false)\n    // - оформлены более maxDays дней назад\n    // Используйте daysBetween(loan.date, currentDate) > maxDays\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst loans = [\n    { bookId: 1, userId: 1, date: '2024-01-01', returned: false },\n    { bookId: 2, userId: 2, date: '2024-01-15', returned: false },\n    { bookId: 3, userId: 1, date: '2024-01-20', returned: true },\n    { bookId: 4, userId: 3, date: '2024-02-01', returned: false },\n    { bookId: 5, userId: 2, date: '2024-02-10', returned: false },\n];\n\n// currentDate = 2024-02-15, maxDays = 14\n// book1: 45 дней, не возвращена -> просрочена\n// book2: 31 день, не возвращена -> просрочена\n// book3: 26 дней, возвращена   -> не включаем\n// book4: 14 дней, не возвращена -> ровно maxDays, не > -> не просрочена\n// book5: 5 дней, не возвращена  -> не просрочена\nconst overdue = getOverdueLoans(loans, '2024-02-15', 14);\nconsole.log(overdue.length);\noverdue.sort((a, b) => a.bookId - b.bookId).forEach(l => console.log(l.bookId));\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-07-1",
+          "description": "Просрочены книги 1 и 2 (> 14 дней)",
+          "input": "",
+          "expectedOutput": "2\n1\n2",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-js-08",
+      "title": "[B] Модуль 8: Рейтинг книг",
+      "description": "## Партнёр B — Задание 8\n\nЧетвёртый модуль Партнёра B — **система оценок книг**. `partner.js` содержит вспомогательные функции из модулей Партнёра A.\n\nРеализуйте в `solution.js`:\n\n### `rateBook(ratings, bookId, userId, score)`\nДобавляет или **обновляет** оценку: если пользователь уже оценивал эту книгу — заменить на новую.\n\n### `getAverageRating(ratings, bookId)`\nВозвращает среднюю оценку книги или `0`, если оценок нет.\n\n### `getTopBooks(ratings, n)`\nВозвращает топ-`n` книг по убыванию средней оценки.  \nФормат: массив объектов `[{ bookId, avg }, ...]`.\n\n---\n*Поздравляем — вы с Партнёром A построили полноценную библиотечную систему!*",
+      "language": "javascript",
+      "order": 7,
+      "files": [
+        {
+          "path": "partner.js",
+          "content": "// Вспомогательные функции из модулей Партнёра A — не изменяйте\nfunction daysBetween(date1, date2) {\n    const d1 = new Date(date1);\n    const d2 = new Date(date2);\n    return Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));\n}\nfunction getOverdueLoans(loans, currentDate, maxDays) {\n    return loans.filter(l => !l.returned && daysBetween(l.date, currentDate) > maxDays);\n}\n",
+          "readOnly": true
+        },
+        {
+          "path": "solution.js",
+          "content": "// Партнёр B: система рейтингов\n\nfunction rateBook(ratings, bookId, userId, score) {\n    // Добавьте оценку или обновите, если пользователь уже оценивал эту книгу\n}\n\nfunction getAverageRating(ratings, bookId) {\n    // Верните среднюю оценку книги или 0, если оценок нет\n}\n\nfunction getTopBooks(ratings, n) {\n    // Верните топ-n книг: [{ bookId, avg }, ...] по убыванию avg\n}\n",
+          "readOnly": false
+        },
+        {
+          "path": "main.js",
+          "content": "// Тестовый раннер — не изменяйте этот файл\nconst ratings = [];\n\nrateBook(ratings, 1, 1, 5);  // книга 1, пользователь 1: 5\nrateBook(ratings, 1, 2, 4);  // книга 1, пользователь 2: 4\nrateBook(ratings, 1, 3, 3);  // книга 1, пользователь 3: 3\nrateBook(ratings, 2, 1, 3);  // книга 2, пользователь 1: 3\nrateBook(ratings, 2, 2, 2);  // книга 2, пользователь 2: 2\nrateBook(ratings, 3, 1, 4);  // книга 3, пользователь 1: 4\nrateBook(ratings, 3, 2, 5);  // книга 3, пользователь 2: 5\nrateBook(ratings, 3, 3, 4);  // книга 3, пользователь 3: 4\n\nrateBook(ratings, 1, 1, 4);  // пользователь 1 обновил оценку книги 1: 5 -> 4\n\n// книга 1: [4, 4, 3] -> avg = 11/3 ≈ 3.67\n// книга 2: [3, 2]    -> avg = 5/2  = 2.50\n// книга 3: [4, 5, 4] -> avg = 13/3 ≈ 4.33\n\nconst avg1 = getAverageRating(ratings, 1);\nconsole.log(avg1.toFixed(2));\n\nconst avg2 = getAverageRating(ratings, 2);\nconsole.log(avg2.toFixed(2));\n\nconst top2 = getTopBooks(ratings, 2);\ntop2.forEach(b => console.log(b.bookId + ' ' + b.avg.toFixed(2)));\n",
+          "readOnly": true
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-js-08-1",
+          "description": "rateBook с обновлением, getAverageRating, getTopBooks",
+          "input": "",
+          "expectedOutput": "3.67\n2.50\n3 4.33\n1 3.67",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

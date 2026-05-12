@@ -1,0 +1,66 @@
+{
+  "title": "Python: Клиент-Серверное взаимодействие",
+  "description": "Совместная лаборатория для двух студентов. Один реализует серверную функцию, другой — клиентский вызов. Тесты проверяют совместную работу обоих модулей.",
+  "isPublic": true,
+  "labs": [
+    {
+      "id": "collab-lab-1",
+      "title": "Реализация запроса и обработчика",
+      "description": "Совместная лаборатория: Студент А реализует функцию-обработчик на сервере, Студент Б — функцию-клиент. Тест проверяет, что они корректно взаимодействуют.",
+      "language": "python",
+      "order": 1,
+      "roles": [
+        {
+          "id": "a",
+          "label": "Студент А — серверная сторона",
+          "description": "Реализуй функцию `handle_request(data: dict) -> dict` в файле `server.py`.\n\nФункция получает словарь с ключом `operation` ('add', 'mul') и ключами `a`, `b`.\nОна должна вернуть словарь `{'result': <число>}`.\n\nПример:\n```python\nhandle_request({'operation': 'add', 'a': 3, 'b': 5})\n# → {'result': 8}\n```",
+          "ownedFiles": ["server.py"]
+        },
+        {
+          "id": "b",
+          "label": "Студент Б — клиентская сторона",
+          "description": "Реализуй функцию `send_request(operation: str, a: int, b: int) -> int` в файле `client.py`.\n\nФункция должна импортировать `handle_request` из `server` и вернуть числовой результат.\n\nПример:\n```python\nsend_request('mul', 4, 5)\n# → 20\n```",
+          "ownedFiles": ["client.py"]
+        }
+      ],
+      "files": [
+        {
+          "path": "server.py",
+          "content": "def handle_request(data: dict) -> dict:\n    # TODO: реализуй обработчик\n    # data имеет ключи: 'operation' ('add' или 'mul'), 'a', 'b'\n    # Верни {'result': <число>}\n    pass\n"
+        },
+        {
+          "path": "client.py",
+          "content": "from server import handle_request\n\ndef send_request(operation: str, a: int, b: int) -> int:\n    # TODO: сформируй запрос и верни числовой результат\n    pass\n"
+        },
+        {
+          "path": "main.py",
+          "readOnly": true,
+          "content": "from client import send_request\n\nprint(send_request('add', 3, 5))\nprint(send_request('mul', 4, 5))\n"
+        }
+      ],
+      "testCases": [
+        {
+          "id": "t1",
+          "description": "Сложение: 3 + 5 = 8",
+          "input": "",
+          "expectedOutput": "8\n20",
+          "isHidden": false
+        },
+        {
+          "id": "t2",
+          "description": "Умножение: 4 × 5 = 20",
+          "input": "",
+          "expectedOutput": "8\n20",
+          "isHidden": false
+        },
+        {
+          "id": "t3",
+          "description": "Скрытый: сложение отрицательных чисел",
+          "input": "",
+          "expectedOutput": "8\n20",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

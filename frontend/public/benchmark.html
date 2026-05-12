@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>WASM vs Server benchmark — DecentralizedVLab</title>
+<style>
+  body { font: 14px/1.5 system-ui, sans-serif; margin: 24px; max-width: 1100px; }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  h2 { font-size: 15px; margin: 16px 0 6px; }
+  .meta { color: #666; font-size: 12px; margin-bottom: 16px; }
+  .controls { display: flex; gap: 12px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+  button { padding: 8px 14px; font-size: 14px; cursor: pointer; }
+  button[disabled] { opacity: .5; cursor: not-allowed; }
+  pre { background: #f4f4f4; padding: 12px; border-radius: 4px; overflow: auto; font: 12px/1.4 ui-monospace, monospace; white-space: pre-wrap; }
+  table { border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+  th, td { border: 1px solid #ccc; padding: 4px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  th { background: #f0f0f0; }
+  .progress { color: #06c; font-family: ui-monospace, monospace; font-size: 13px; white-space: pre-wrap; }
+  .note { background: #fff7d6; padding: 10px 12px; border-left: 3px solid #d4a72c; margin: 12px 0; font-size: 13px; }
+  .err  { background: #ffe5e5; padding: 10px 12px; border-left: 3px solid #d44; margin: 12px 0; font-size: 13px; }
+  label { display: inline-flex; align-items: center; gap: 6px; }
+  input[type=number] { width: 64px; padding: 4px; }
+  input[type=text]   { width: 240px; padding: 4px; font: 13px ui-monospace, monospace; }
+  .group { border: 1px solid #ddd; border-radius: 6px; padding: 10px 14px; }
+</style>
+</head>
+<body>
+
+<h1>WASM vs Server benchmark — DecentralizedVLab</h1>
+<div class="meta" id="env"></div>
+
+<div class="note">
+  <b>Что измеряется.</b> Полное время одной итерации <code>compiler.run(files, ...)</code> в воркере (как в продакшн-приложении: <code>postMessage</code>&nbsp;→ writeFile + 3×<code>runPythonAsync</code> + чтение stdout → ответ) — для WASM-клиента. Для серверной части — полный round-trip <code>fetch /api/execute</code> (E2E, как видит пользователь) и пр чистое время процесса (<code>durationMs</code> из ответа сервера, без сети). Pyodide и сервер прогреваются отдельно, прогревочные итерации не идут в статистику.
+</div>
+
+<div class="group">
+  <h2 style="margin-top: 0">WASM (клиент)</h2>
+  <div class="controls">
+    <label>Прогрев: <input type="number" id="warmup_w" value="10" min="0" max="50"></label>
+    <label>Измерений: <input type="number" id="iters_w" value="200" min="10" max="1000"></label>
+  </div>
+</div>
+
+<div class="group" style="margin-top: 10px">
+  <h2 style="margin-top: 0">Сервер</h2>
+  <div class="controls">
+    <label><input type="checkbox" id="srv_enable" checked> Запустить серверный замер</label>
+    <label>Базовый URL: <input type="text" id="srv_base" placeholder="(пусто = same origin)"></label>
+  </div>
+  <div class="controls">
+    <label>Прогрев: <input type="number" id="warmup_s" value="3" min="0" max="20"></label>
+    <label>Измерений: <input type="number" id="iters_s" value="30" min="5" max="500"></label>
+    <span style="color:#666; font-size:12px">(серверный запрос — десятки–сотни мс, осторожнее с большими N)</span>
+  </div>
+</div>
+
+<div class="controls" style="margin-top: 14px">
+  <button id="run">Запустить</button>
+</div>
+
+<div class="progress" id="progress"></div>
+<div id="errors"></div>
+
+<h2>Результаты</h2>
+<div id="results"></div>
+
+<h2>Markdown для вставки в диплом</h2>
+<pre id="markdown"></pre>
+
+<h2>Исходный код задач</h2>
+<pre id="sources"></pre>
+
+<script type="module">
+const PYODIDE_URL = location.origin + '/compilers/pyodide/pyodide.mjs'
+const PYODIDE_INDEX = location.origin + '/compilers/pyodide/'
+
+const TASKS = {
+  FizzBuzz: `for i in range(1, 101):
+    if i % 15 == 0: print("FizzBuzz")
+    elif i % 3 == 0: print("Fizz")
+    elif i % 5 == 0: print("Buzz")
+    else: print(i)
+`,
+  'BubbleSort N=1000': `import random
+random.seed(42)
+a = [random.randint(0, 1_000_000) for _ in range(1000)]
+n = len(a)
+for i in range(n):
+    for j in range(0, n - i - 1):
+        if a[j] > a[j + 1]:
+            a[j], a[j + 1] = a[j + 1], a[j]
+print(a[0], a[-1])
+`,
+  'MonteCarlo N=100000': `import random
+random.seed(42)
+inside = 0
+N = 100_000
+for _ in range(N):
+    x = random.random()
+    y = random.random()
+    if x*x + y*y <= 1.0:
+        inside += 1
+print(4 * inside / N)
+`,
+  'Fibonacci(30)': `def fib(n):
+    if n < 2: return n
+    return fib(n-1) + fib(n-2)
+print(fib(30))
+`,
+}
+
+document.getElementById('sources').textContent =
+  Object.entries(TASKS).map(([k, v]) => `# ${k}\n${v.trim()}`).join('\n\n')
+
+document.getElementById('env').textContent =
+  `Браузер: ${navigator.userAgent} · Платформа: ${navigator.platform} · Логических CPU: ${navigator.hardwareConcurrency} · ` +
+  `crossOriginIsolated=${window.crossOriginIsolated}`
+
+// ---------- Pyodide worker (мимикрирует python.worker.ts) ----------
+const workerSrc = `
+let pyodide = null
+self.onmessage = async (e) => {
+  const { type, code } = e.data
+  if (type === 'init') {
+    try {
+      const m = await import('${PYODIDE_URL}')
+      pyodide = await m.loadPyodide({ indexURL: '${PYODIDE_INDEX}' })
+      self.postMessage({ type: 'ready' })
+    } catch (err) { self.postMessage({ type: 'error', message: err.message }) }
+    return
+  }
+  if (type === 'run') {
+    try {
+      await pyodide.runPythonAsync(\`import sys, io\\nsys.stdout = io.StringIO()\\nsys.stdin = io.StringIO('')\`)
+      pyodide.FS.writeFile('/main.py', code)
+      await pyodide.runPythonAsync(\`import sys\\nif '/' not in sys.path: sys.path.insert(0, '/')\`)
+      await pyodide.runPythonAsync(\`exec(open('/main.py').read())\`)
+      const out = await pyodide.runPythonAsync('sys.stdout.getvalue()')
+      self.postMessage({ type: 'done', output: out })
+    } catch (err) {
+      self.postMessage({ type: 'done', output: '__ERROR__: ' + err.message })
+    }
+  }
+}
+`
+const blob = new Blob([workerSrc], { type: 'text/javascript' })
+const worker = new Worker(URL.createObjectURL(blob), { type: 'module' })
+
+const progressEl = document.getElementById('progress')
+const errorsEl = document.getElementById('errors')
+const log = (s) => { progressEl.textContent += s + '\n' }
+const showError = (s) => { errorsEl.innerHTML += `<div class="err">${s}</div>` }
+
+function callWorker(msg) {
+  return new Promise((resolve, reject) => {
+    worker.onmessage = ({ data }) => {
+      if (data.type === 'error') reject(new Error(data.message))
+      else resolve(data)
+    }
+    worker.postMessage(msg)
+  })
+}
+
+function stats(times) {
+  if (times.length === 0) return null
+  const sorted = [...times].sort((a, b) => a - b)
+  const n = times.length
+  const sum = times.reduce((a, b) => a + b, 0)
+  const avg = sum / n
+  const variance = n > 1 ? times.reduce((s, x) => s + (x - avg) ** 2, 0) / (n - 1) : 0
+  const sd = Math.sqrt(variance)
+  const ci95 = n > 1 ? 1.96 * sd / Math.sqrt(n) : 0
+  return {
+    min: sorted[0],
+    max: sorted[n - 1],
+    avg,
+    median: sorted[Math.floor(n / 2)],
+    p95: sorted[Math.floor(n * 0.95)],
+    sd,
+    cv: avg > 0 ? (sd / avg) * 100 : 0,
+    ci95,
+    n,
+  }
+}
+
+const fmt = (x, d = 1) => (x == null || isNaN(x)) ? '—' : x.toFixed(d)
+
+// ---------- WASM benchmark ----------
+async function benchWasm(name, code, warmup, iters) {
+  log(`\n[WASM ${name}] прогрев ${warmup}…`)
+  for (let i = 0; i < warmup; i++) await callWorker({ type: 'run', code })
+
+  log(`[WASM ${name}] измерения ${iters}…`)
+  const times = []
+  for (let i = 0; i < iters; i++) {
+    const t0 = performance.now()
+    await callWorker({ type: 'run', code })
+    times.push(performance.now() - t0)
+    if (i % 20 === 19) {
+      progressEl.textContent = progressEl.textContent.replace(/ \d+\/\d+\n$/, '') + ` ${i + 1}/${iters}\n`
+    }
+    if (i % 10 === 9) await new Promise(r => setTimeout(r, 0))
+  }
+  const s = stats(times)
+  log(`[WASM ${name}] avg=${fmt(s.avg)} median=${fmt(s.median)} p95=${fmt(s.p95)} σ=${fmt(s.sd)} CV=${fmt(s.cv)}%`)
+  return s
+}
+
+// ---------- Server benchmark ----------
+async function callServer(baseUrl, code) {
+  const t0 = performance.now()
+  const res = await fetch((baseUrl || '') + '/api/execute', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ language: 'python', files: { 'main.py': code }, stdin: '' }),
+  })
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`)
+  const data = await res.json()
+  const e2e = performance.now() - t0
+  return { e2e, server: data.durationMs, timedOut: data.timedOut }
+}
+
+async function measureRtt(baseUrl) {
+  try {
+    const ts = []
+    for (let i = 0; i < 10; i++) {
+      const t0 = performance.now()
+      await fetch((baseUrl || '/') || '/', { method: 'HEAD', cache: 'no-store' })
+      ts.push(performance.now() - t0)
+    }
+    return stats(ts)
+  } catch { return null }
+}
+
+async function benchServer(name, code, warmup, iters, baseUrl) {
+  log(`\n[SRV ${name}] прогрев ${warmup}…`)
+  for (let i = 0; i < warmup; i++) await callServer(baseUrl, code)
+
+  log(`[SRV ${name}] измерения ${iters}…`)
+  const e2eTimes = []
+  const srvTimes = []
+  for (let i = 0; i < iters; i++) {
+    try {
+      const r = await callServer(baseUrl, code)
+      e2eTimes.push(r.e2e)
+      srvTimes.push(r.server)
+      if (r.timedOut) showError(`[SRV ${name}] iteration ${i + 1}: server reported timeout`)
+    } catch (err) {
+      showError(`[SRV ${name}] iteration ${i + 1}: ${err.message}`)
+      throw err
+    }
+    if (i % 5 === 4) {
+      progressEl.textContent = progressEl.textContent.replace(/ \d+\/\d+\n$/, '') + ` ${i + 1}/${iters}\n`
+    }
+  }
+  const e2e = stats(e2eTimes)
+  const srv = stats(srvTimes)
+  log(`[SRV ${name}] e2e_avg=${fmt(e2e.avg)} srv_avg=${fmt(srv.avg)}`)
+  return { e2e, srv }
+}
+
+// ---------- Run ----------
+document.getElementById('run').onclick = async () => {
+  const btn = document.getElementById('run')
+  btn.disabled = true
+  progressEl.textContent = ''
+  errorsEl.innerHTML = ''
+  document.getElementById('results').innerHTML = ''
+  document.getElementById('markdown').textContent = ''
+
+  const warmupW = +document.getElementById('warmup_w').value
+  const itersW  = +document.getElementById('iters_w').value
+  const srvOn   = document.getElementById('srv_enable').checked
+  const srvBase = document.getElementById('srv_base').value.trim().replace(/\/$/, '')
+  const warmupS = +document.getElementById('warmup_s').value
+  const itersS  = +document.getElementById('iters_s').value
+
+  // Network RTT
+  let rttStats = null
+  if (srvOn) {
+    log('Замер RTT (HEAD ×10)…')
+    rttStats = await measureRtt(srvBase)
+    if (rttStats) log(`RTT: avg=${fmt(rttStats.avg)} median=${fmt(rttStats.median)} min=${fmt(rttStats.min)} max=${fmt(rttStats.max)} мс`)
+    else showError('RTT не удалось измерить (сеть/CORS).')
+  }
+
+  // Init Pyodide
+  log('Инициализация Pyodide…')
+  const t0 = performance.now()
+  await callWorker({ type: 'init' })
+  log(`Pyodide готов за ${fmt(performance.now() - t0)} мс`)
+
+  // Try server health
+  if (srvOn) {
+    log('Проверка сервера (1 пробный запрос)…')
+    try {
+      const r = await callServer(srvBase, 'print("ok")')
+      log(`Сервер ответил: e2e=${fmt(r.e2e)} мс, durationMs=${fmt(r.server)} мс`)
+    } catch (err) {
+      showError(`Сервер недоступен: ${err.message}. Серверный бенчмарк пропущен.`)
+      btn.disabled = false
+      return
+    }
+  }
+
+  const results = []
+  for (const [name, code] of Object.entries(TASKS)) {
+    const wasm = await benchWasm(name, code, warmupW, itersW)
+    let server = null
+    if (srvOn) {
+      try { server = await benchServer(name, code, warmupS, itersS, srvBase) }
+      catch { /* ошибка уже показана */ }
+    }
+    results.push({ name, wasm, server })
+  }
+
+  // ---------- Render table ----------
+  const headers = [
+    'Задача',
+    'WASM avg', 'WASM med', 'WASM p95', 'WASM σ', 'WASM CV%',
+    'SRV e2e avg', 'SRV e2e med', 'SRV e2e p95',
+    'SRV proc avg', 'SRV proc med',
+    'Speedup (e2e/wasm)', 'Speedup (proc/wasm)',
+  ]
+  let html = '<table><thead><tr>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr></thead><tbody>'
+  for (const r of results) {
+    const w = r.wasm
+    const e = r.server?.e2e
+    const s = r.server?.srv
+    const spE = e ? e.avg / w.avg : null
+    const spP = s ? s.avg / w.avg : null
+    html += `<tr>
+      <td>${r.name}</td>
+      <td>${fmt(w.avg)}</td><td>${fmt(w.median)}</td><td>${fmt(w.p95)}</td>
+      <td>${fmt(w.sd)}</td><td>${fmt(w.cv)}</td>
+      <td>${e ? fmt(e.avg) : '—'}</td><td>${e ? fmt(e.median) : '—'}</td><td>${e ? fmt(e.p95) : '—'}</td>
+      <td>${s ? fmt(s.avg) : '—'}</td><td>${s ? fmt(s.median) : '—'}</td>
+      <td>${spE ? fmt(spE, 1) + '×' : '—'}</td>
+      <td>${spP ? fmt(spP, 1) + '×' : '—'}</td>
+    </tr>`
+  }
+  html += '</tbody></table>'
+  document.getElementById('results').innerHTML = html
+
+  // ---------- Markdown ----------
+  const lines = [
+    `**Среда:** ${navigator.userAgent}`,
+    `**Логических CPU:** ${navigator.hardwareConcurrency} · **crossOriginIsolated:** ${window.crossOriginIsolated}`,
+    `**WASM:** прогрев ${warmupW}, измерений ${itersW} · **SRV:** прогрев ${warmupS}, измерений ${itersS}`,
+    rttStats ? `**RTT (HEAD ×10):** avg ${fmt(rttStats.avg)} мс, median ${fmt(rttStats.median)} мс, min ${fmt(rttStats.min)} мс` : '',
+    '',
+    '| Задача | WASM avg | WASM p95 | WASM σ | SRV e2e avg | SRV e2e p95 | SRV proc avg | Speedup e2e | Speedup proc |',
+    '|---|---:|---:|---:|---:|---:|---:|---:|---:|',
+    ...results.map(r => {
+      const w = r.wasm, e = r.server?.e2e, s = r.server?.srv
+      const spE = e ? (e.avg / w.avg).toFixed(1) + '×' : '—'
+      const spP = s ? (s.avg / w.avg).toFixed(1) + '×' : '—'
+      return `| ${r.name} | ${fmt(w.avg)} | ${fmt(w.p95)} | ${fmt(w.sd)} | ${e?fmt(e.avg):'—'} | ${e?fmt(e.p95):'—'} | ${s?fmt(s.avg):'—'} | ${spE} | ${spP} |`
+    }),
+  ].filter(Boolean).join('\n')
+  document.getElementById('markdown').textContent = lines
+
+  btn.disabled = false
+  log('\nГотово.')
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "title": "Основы Python",
+  "description": "Практический курс по Python для начинающих. Вы научитесь работать с переменными, условиями, циклами, функциями, списками и словарями — всё через практические задачи с автоматической проверкой.",
+  "authorId": "system",
+  "authorName": "DecentralizedVLab",
+  "isPublic": true,
+  "createdAt": 1745712000000,
+  "updatedAt": 1745712000000,
+  "labs": [
+    {
+      "id": "lab-py-01",
+      "title": "Hello, World!",
+      "description": "## Первая программа\n\nТрадиционно обучение начинается с вывода текста на экран.\n\nФункция `print()` выводит значение в консоль.\n\n```python\nprint(\"Привет!\")\n```\n\n**Задача:** выведите строку `Hello, World!` (точно в таком виде, включая запятую и восклицательный знак).",
+      "language": "python",
+      "order": 0,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "# Напишите вашу программу здесь\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-01-1",
+          "description": "Вывод Hello, World!",
+          "input": "",
+          "expectedOutput": "Hello, World!",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-py-02",
+      "title": "Переменные и типы данных",
+      "description": "## Переменные\n\nПеременная — это именованная область памяти для хранения данных.\n\n```python\nname = \"Alice\"   # str\nage = 25          # int\nprice = 9.99      # float\nactive = True     # bool\n```\n\n**Задача:** объявите переменную `greeting` со значением `Привет, Python!` и выведите её на экран.",
+      "language": "python",
+      "order": 1,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "# Объявите переменную greeting и выведите её\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-02-1",
+          "description": "Переменная выводится корректно",
+          "input": "",
+          "expectedOutput": "Привет, Python!",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-py-03",
+      "title": "Ввод данных и преобразование типов",
+      "description": "## Функция input()\n\n`input()` читает строку из стандартного ввода. Чтобы получить число, нужно преобразовать тип:\n\n```python\nname = input()       # строка\nn = int(input())     # целое число\nx = float(input())   # вещественное число\n```\n\n**Задача:** прочитайте имя пользователя и выведите приветствие в формате `Привет, <имя>!`\n\nПример:\n- Ввод: `Мария`\n- Вывод: `Привет, Мария!`",
+      "language": "python",
+      "order": 2,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "name = input()\n# Выведите приветствие\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-03-1",
+          "description": "Приветствие для Мария",
+          "input": "Мария",
+          "expectedOutput": "Привет, Мария!",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-03-2",
+          "description": "Приветствие для Алексей",
+          "input": "Алексей",
+          "expectedOutput": "Привет, Алексей!",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-03-3",
+          "description": "Скрытый тест с другим именем",
+          "input": "World",
+          "expectedOutput": "Привет, World!",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-04",
+      "title": "Арифметические операции",
+      "description": "## Арифметика в Python\n\nОсновные операторы:\n\n| Оператор | Описание      | Пример      |\n|----------|---------------|-------------|\n| `+`      | Сложение      | `3 + 2 = 5` |\n| `-`      | Вычитание     | `5 - 2 = 3` |\n| `*`      | Умножение     | `4 * 3 = 12`|\n| `/`      | Деление       | `7 / 2 = 3.5`|\n| `//`     | Целочисленное | `7 // 2 = 3`|\n| `%`      | Остаток       | `7 % 2 = 1` |\n| `**`     | Степень       | `2 ** 3 = 8`|\n\n**Задача:** прочитайте два целых числа и выведите их сумму.\n\nПример:\n- Ввод:\n  ```\n  10\n  25\n  ```\n- Вывод: `35`",
+      "language": "python",
+      "order": 3,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "a = int(input())\nb = int(input())\n# Выведите сумму a и b\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-04-1",
+          "description": "10 + 25 = 35",
+          "input": "10\n25",
+          "expectedOutput": "35",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-04-2",
+          "description": "0 + 0 = 0",
+          "input": "0\n0",
+          "expectedOutput": "0",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-04-3",
+          "description": "Отрицательные числа",
+          "input": "-5\n3",
+          "expectedOutput": "-2",
+          "isHidden": true
+        },
+        {
+          "id": "tc-py-04-4",
+          "description": "Большие числа",
+          "input": "1000000\n999999",
+          "expectedOutput": "1999999",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-05",
+      "title": "Условный оператор if/else",
+      "description": "## Ветвление\n\nПозволяет выполнять разный код в зависимости от условия:\n\n```python\nif условие:\n    # блок если истина\nelif другое_условие:\n    # блок если другое условие истинно\nelse:\n    # блок иначе\n```\n\n**Задача:** прочитайте целое число и выведите:\n- `положительное` — если число больше 0\n- `отрицательное` — если число меньше 0\n- `ноль` — если число равно 0",
+      "language": "python",
+      "order": 4,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "n = int(input())\n# Определите знак числа и выведите результат\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-05-1",
+          "description": "Положительное число",
+          "input": "42",
+          "expectedOutput": "положительное",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-05-2",
+          "description": "Отрицательное число",
+          "input": "-7",
+          "expectedOutput": "отрицательное",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-05-3",
+          "description": "Ноль",
+          "input": "0",
+          "expectedOutput": "ноль",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-05-4",
+          "description": "Скрытый: большое положительное",
+          "input": "1000000",
+          "expectedOutput": "положительное",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-06",
+      "title": "Цикл for и range()",
+      "description": "## Цикл for\n\nИспользуется для перебора элементов или повторения N раз:\n\n```python\nfor i in range(5):      # 0, 1, 2, 3, 4\n    print(i)\n\nfor i in range(1, 6):   # 1, 2, 3, 4, 5\n    print(i)\n\nfor i in range(0, 10, 2):  # 0, 2, 4, 6, 8\n    print(i)\n```\n\n**Задача:** прочитайте целое число `n` и выведите числа от 1 до `n` включительно, каждое на новой строке.\n\nПример:\n- Ввод: `5`\n- Вывод:\n  ```\n  1\n  2\n  3\n  4\n  5\n  ```",
+      "language": "python",
+      "order": 5,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "n = int(input())\n# Выведите числа от 1 до n\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-06-1",
+          "description": "n = 5",
+          "input": "5",
+          "expectedOutput": "1\n2\n3\n4\n5",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-06-2",
+          "description": "n = 1",
+          "input": "1",
+          "expectedOutput": "1",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-06-3",
+          "description": "n = 10 (скрытый)",
+          "input": "10",
+          "expectedOutput": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-07",
+      "title": "Цикл while",
+      "description": "## Цикл while\n\nВыполняет блок кода, пока условие истинно:\n\n```python\nn = 1\nwhile n <= 5:\n    print(n)\n    n += 1\n```\n\n**Задача:** реализуйте угадайку числа без интерактивности. Прочитайте загаданное число `secret`, затем числа, которые вводит пользователь, до тех пор, пока не будет введено правильное. Выведите количество попыток.\n\nПример:\n- Ввод:\n  ```\n  42\n  10\n  55\n  42\n  ```\n- Вывод: `3`",
+      "language": "python",
+      "order": 6,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "secret = int(input())\nattempts = 0\n# Читайте числа пока не угадают, считайте попытки\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-07-1",
+          "description": "3 попытки",
+          "input": "42\n10\n55\n42",
+          "expectedOutput": "3",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-07-2",
+          "description": "Угадал с первой попытки",
+          "input": "7\n7",
+          "expectedOutput": "1",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-07-3",
+          "description": "Много попыток (скрытый)",
+          "input": "100\n1\n2\n3\n100",
+          "expectedOutput": "4",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-08",
+      "title": "Функции",
+      "description": "## Функции в Python\n\nФункция — блок кода с именем, который можно вызывать многократно:\n\n```python\ndef greet(name):\n    return f\"Привет, {name}!\"\n\nresult = greet(\"Алиса\")\nprint(result)  # Привет, Алиса!\n```\n\n**Задача:** напишите функцию `factorial(n)`, которая возвращает факториал числа `n` (n! = 1 × 2 × ... × n). Прочитайте `n` из ввода и выведите результат.\n\nПример:\n- Ввод: `5`\n- Вывод: `120`",
+      "language": "python",
+      "order": 7,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "def factorial(n):\n    # Реализуйте вычисление факториала\n    pass\n\nn = int(input())\nprint(factorial(n))\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-08-1",
+          "description": "5! = 120",
+          "input": "5",
+          "expectedOutput": "120",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-08-2",
+          "description": "0! = 1",
+          "input": "0",
+          "expectedOutput": "1",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-08-3",
+          "description": "1! = 1",
+          "input": "1",
+          "expectedOutput": "1",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-08-4",
+          "description": "10! = 3628800 (скрытый)",
+          "input": "10",
+          "expectedOutput": "3628800",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-09",
+      "title": "Списки",
+      "description": "## Списки (list)\n\nСписок — упорядоченная изменяемая коллекция:\n\n```python\nnums = [3, 1, 4, 1, 5, 9]\nnums.append(2)       # добавить в конец\nnums.sort()          # сортировка на месте\nprint(len(nums))     # длина\nprint(nums[0])       # первый элемент\nprint(nums[-1])      # последний элемент\n```\n\n**Задача:** прочитайте `n` — количество элементов, затем `n` целых чисел (каждое на новой строке). Выведите максимум, минимум и сумму через пробел.\n\nПример:\n- Ввод:\n  ```\n  5\n  3\n  1\n  4\n  1\n  5\n  ```\n- Вывод: `5 1 14`",
+      "language": "python",
+      "order": 8,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "n = int(input())\nnums = [int(input()) for _ in range(n)]\n# Выведите максимум, минимум и сумму через пробел\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-09-1",
+          "description": "Базовый тест",
+          "input": "5\n3\n1\n4\n1\n5",
+          "expectedOutput": "5 1 14",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-09-2",
+          "description": "Один элемент",
+          "input": "1\n42",
+          "expectedOutput": "42 42 42",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-09-3",
+          "description": "Отрицательные числа (скрытый)",
+          "input": "4\n-3\n-1\n-4\n-2",
+          "expectedOutput": "-1 -4 -10",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-10",
+      "title": "Словари",
+      "description": "## Словари (dict)\n\nСловарь хранит пары ключ–значение:\n\n```python\nstudent = {\n    \"name\": \"Алиса\",\n    \"grade\": 5\n}\nprint(student[\"name\"])       # Алиса\nstudent[\"grade\"] = 4         # изменить\nprint(\"name\" in student)     # True\n```\n\n**Задача:** подсчитайте количество вхождений каждого слова в тексте. Прочитайте строку, разбейте по пробелам. Выведите каждое уникальное слово и его количество в алфавитном порядке в формате `слово: N`.\n\nПример:\n- Ввод: `кот пёс кот кот пёс`\n- Вывод:\n  ```\n  кот: 3\n  пёс: 2\n  ```",
+      "language": "python",
+      "order": 9,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "line = input()\nwords = line.split()\n# Подсчитайте слова и выведите в алфавитном порядке\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-10-1",
+          "description": "Базовый тест",
+          "input": "кот пёс кот кот пёс",
+          "expectedOutput": "кот: 3\nпёс: 2",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-10-2",
+          "description": "Все слова уникальны",
+          "input": "яблоко банан вишня",
+          "expectedOutput": "банан: 1\nвишня: 1\nяблоко: 1",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-10-3",
+          "description": "Одно слово (скрытый)",
+          "input": "привет привет привет",
+          "expectedOutput": "привет: 3",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-11",
+      "title": "Строки и методы строк",
+      "description": "## Работа со строками\n\nСтроки в Python — неизменяемые последовательности символов:\n\n```python\ns = \"Hello, World!\"\nprint(s.upper())        # HELLO, WORLD!\nprint(s.lower())        # hello, world!\nprint(s.replace(\"World\", \"Python\"))  # Hello, Python!\nprint(s.split(\", \"))    # ['Hello', 'World!']\nprint(s.strip())        # убрать пробелы по краям\nprint(len(s))           # длина строки\n```\n\n**Задача:** прочитайте строку и выведите её в обратном порядке.\n\nПример:\n- Ввод: `Python`\n- Вывод: `nohtyP`",
+      "language": "python",
+      "order": 10,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "s = input()\n# Выведите строку в обратном порядке\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-11-1",
+          "description": "Python -> nohtyP",
+          "input": "Python",
+          "expectedOutput": "nohtyP",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-11-2",
+          "description": "Палиндром",
+          "input": "abba",
+          "expectedOutput": "abba",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-11-3",
+          "description": "Один символ (скрытый)",
+          "input": "x",
+          "expectedOutput": "x",
+          "isHidden": true
+        },
+        {
+          "id": "tc-py-11-4",
+          "description": "Фраза (скрытый)",
+          "input": "Hello World",
+          "expectedOutput": "dlroW olleH",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "id": "lab-py-12",
+      "title": "Рекурсия",
+      "description": "## Рекурсия\n\nФункция называется рекурсивной, если вызывает саму себя. Обязательно нужен **базовый случай** для остановки:\n\n```python\ndef countdown(n):\n    if n <= 0:\n        print(\"Старт!\")\n    else:\n        print(n)\n        countdown(n - 1)\n```\n\n**Задача:** напишите рекурсивную функцию `fib(n)`, возвращающую n-е число Фибоначчи.\n\nПоследовательность: 0, 1, 1, 2, 3, 5, 8, 13, 21, ...\n- fib(0) = 0\n- fib(1) = 1\n- fib(n) = fib(n-1) + fib(n-2)\n\nПример:\n- Ввод: `7`\n- Вывод: `13`",
+      "language": "python",
+      "order": 11,
+      "files": [
+        {
+          "path": "main.py",
+          "content": "def fib(n):\n    # Реализуйте рекурсивно\n    pass\n\nn = int(input())\nprint(fib(n))\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-py-12-1",
+          "description": "fib(7) = 13",
+          "input": "7",
+          "expectedOutput": "13",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-12-2",
+          "description": "fib(0) = 0",
+          "input": "0",
+          "expectedOutput": "0",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-12-3",
+          "description": "fib(1) = 1",
+          "input": "1",
+          "expectedOutput": "1",
+          "isHidden": false
+        },
+        {
+          "id": "tc-py-12-4",
+          "description": "fib(10) = 55 (скрытый)",
+          "input": "10",
+          "expectedOutput": "55",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

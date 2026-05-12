@@ -1,0 +1,292 @@
+{
+  "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+  "title": "SQL с нуля: SQLite",
+  "description": "Практический курс по языку запросов SQL на движке SQLite. Пройдёте путь от простого SELECT до подзапросов, JOIN и операций изменения данных. Каждая лаба — реальная бизнес-задача на единой базе сотрудников компании.",
+  "authorId": "system",
+  "authorName": "DecentralizedVLab",
+  "isPublic": true,
+  "createdAt": 1745798400000,
+  "updatedAt": 1745798400000,
+  "labs": [
+    {
+      "id": "lab-sql-01",
+      "title": "SELECT: выборка всех данных",
+      "description": "## Ваша первая выборка\n\nОператор `SELECT` извлекает данные из таблицы:\n\n```sql\nSELECT * FROM table_name;\n```\n\n`*` означает «все столбцы». Справа вы видите схему таблицы `employees`:\n\n| Столбец | Тип | Описание |\n|---------|-----|----------|\n| id | INTEGER | уникальный номер |\n| name | TEXT | имя |\n| department | TEXT | отдел |\n| salary | INTEGER | зарплата |\n| age | INTEGER | возраст |\n\n**Задача:** выведите все данные из таблицы `employees` в исходном порядке.",
+      "language": "sqlite",
+      "order": 0,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Напишите запрос для выборки всех сотрудников\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-01-1",
+          "description": "Все строки таблицы employees",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 7)\n\n-- solution.sql\nid | name | department | salary | age\n-------------------------------------\n1 | Анна | IT | 60000 | 28\n2 | Борис | HR | 65000 | 35\n3 | Вера | IT | 70000 | 32\n4 | Георгий | Финансы | 75000 | 45\n5 | Дина | IT | 80000 | 27\n6 | Егор | HR | 85000 | 31\n7 | Жанна | Финансы | 90000 | 38",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-02",
+      "title": "WHERE: фильтрация строк",
+      "description": "## Условная выборка\n\nПредложение `WHERE` ограничивает строки по условию:\n\n```sql\nSELECT col1, col2\nFROM table_name\nWHERE условие;\n```\n\nОператоры сравнения: `=`, `!=`, `<`, `>`, `<=`, `>=`  \nЛогические: `AND`, `OR`, `NOT`  \nСтроки: `LIKE 'шаблон%'`\n\n**Задача:** выведите `name` и `salary` сотрудников отдела `IT`, отсортированных по зарплате по убыванию (`ORDER BY salary DESC`).",
+      "language": "sqlite",
+      "order": 1,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Выберите имя и зарплату сотрудников IT, от большей к меньшей\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-02-1",
+          "description": "IT-сотрудники по убыванию зарплаты",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 7)\n\n-- solution.sql\nname | salary\n-------------\nДина | 80000\nВера | 70000\nАнна | 60000",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-03",
+      "title": "ORDER BY: сортировка",
+      "description": "## Сортировка результатов\n\n```sql\nSELECT ...\nFROM ...\nORDER BY col1 ASC, col2 DESC;\n```\n\n- `ASC` — по возрастанию (по умолчанию)\n- `DESC` — по убыванию\n- Можно сортировать по нескольким столбцам: сначала по первому, при равенстве — по второму\n\n**Задача:** выведите `name`, `age`, `salary` всех сотрудников, отсортированных:\n1. По возрасту по возрастанию\n2. При одинаковом возрасте — по имени в алфавитном порядке",
+      "language": "sqlite",
+      "order": 2,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Выведите name, age, salary, отсортировав по возрасту (а при равенстве — по имени)\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-03-1",
+          "description": "Сортировка по возрасту и имени",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 7)\n\n-- solution.sql\nname | age | salary\n-------------------\nДина | 27 | 80000\nАнна | 28 | 60000\nЕгор | 31 | 85000\nВера | 32 | 70000\nБорис | 35 | 65000\nЖанна | 38 | 90000\nГеоргий | 45 | 75000",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-04",
+      "title": "Агрегатные функции",
+      "description": "## Вычисления по набору строк\n\nАгрегатные функции сводят много строк в одно значение:\n\n| Функция | Результат |\n|---------|----------|\n| `COUNT(*)` | количество строк |\n| `SUM(col)` | сумма |\n| `MIN(col)` | минимум |\n| `MAX(col)` | максимум |\n| `AVG(col)` | среднее (возвращает REAL) |\n\n**Задача:** одним запросом выведите четыре показателя по всей таблице:\n- `cnt` — число сотрудников\n- `min_sal` — минимальная зарплата\n- `max_sal` — максимальная зарплата\n- `avg_sal` — средняя зарплата (`AVG`)",
+      "language": "sqlite",
+      "order": 3,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Подсчитайте cnt, min_sal, max_sal, avg_sal по всем сотрудникам\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-04-1",
+          "description": "Агрегаты по таблице employees",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 7)\n\n-- solution.sql\ncnt | min_sal | max_sal | avg_sal\n---------------------------------\n7 | 60000 | 90000 | 75000.0",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-05",
+      "title": "GROUP BY: группировка",
+      "description": "## Агрегаты по группам\n\n`GROUP BY` разбивает строки на группы и применяет агрегат к каждой:\n\n```sql\nSELECT department, COUNT(*) AS cnt\nFROM employees\nGROUP BY department;\n```\n\nВажно: в `SELECT` после `GROUP BY` можно использовать только:\n- столбцы, перечисленные в `GROUP BY`\n- агрегатные функции\n\n**Задача:** выведите `department` и `cnt` (количество сотрудников) для каждого отдела, отсортировав по названию отдела.",
+      "language": "sqlite",
+      "order": 4,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Сгруппируйте сотрудников по отделу и подсчитайте количество в каждом\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-05-1",
+          "description": "Количество сотрудников по отделам",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 7)\n\n-- solution.sql\ndepartment | cnt\n----------------\nHR | 2\nIT | 3\nФинансы | 2",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-06",
+      "title": "HAVING: фильтрация групп",
+      "description": "## Фильтрация после группировки\n\n`WHERE` фильтрует строки ДО группировки, `HAVING` — ПОСЛЕ:\n\n```sql\nSELECT department, AVG(salary) AS avg_sal\nFROM employees\nGROUP BY department\nHAVING avg_sal > 70000\nORDER BY avg_sal DESC;\n```\n\n**Задача:** выведите `department` и `avg_salary` (средняя зарплата) только для тех отделов, где средняя зарплата **строго больше 70 000**. Отсортируйте по средней зарплате по убыванию.\n\n> Подсказка: `AVG()` возвращает дробное число (например, `75000.0`)",
+      "language": "sqlite",
+      "order": 5,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Выведите отделы со средней зарплатой > 70000, отсортировав по avg_salary DESC\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-06-1",
+          "description": "Отделы с avg_salary > 70000",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 7)\n\n-- solution.sql\ndepartment | avg_salary\n-----------------------\nФинансы | 82500.0\nHR | 75000.0",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-07",
+      "title": "INNER JOIN: соединение таблиц",
+      "description": "## Объединение данных из нескольких таблиц\n\n`INNER JOIN` возвращает только строки, для которых есть совпадение в обеих таблицах:\n\n```sql\nSELECT e.name, p.name AS project\nFROM employees e\nINNER JOIN assignments a ON e.id = a.employee_id\nINNER JOIN projects p ON p.id = a.project_id;\n```\n\nВ базе три таблицы:\n- `employees` — сотрудники\n- `projects` — проекты (Мобильное приложение, Веб-платформа, База данных)\n- `assignments(employee_id, project_id, hours)` — назначения\n\n**Задача:** выведите `name` сотрудника и `project` (название проекта) для всех назначений. Отсортируйте по имени сотрудника, затем по названию проекта.",
+      "language": "sqlite",
+      "order": 6,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);\nCREATE TABLE projects (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    budget INTEGER\n);\nINSERT INTO projects VALUES\n(1, 'Мобильное приложение', 500000),\n(2, 'Веб-платформа', 300000),\n(3, 'База данных', 200000);\nCREATE TABLE assignments (\n    employee_id INTEGER,\n    project_id INTEGER,\n    hours INTEGER\n);\nINSERT INTO assignments VALUES\n(1, 1, 120),\n(1, 2, 80),\n(3, 1, 150),\n(3, 3, 60),\n(5, 2, 100),\n(5, 3, 90),\n(2, 1, 40),\n(4, 2, 50);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Выведите имя сотрудника и название проекта для всех назначений\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-07-1",
+          "description": "Сотрудники и их проекты через INNER JOIN",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 8)\n\n-- solution.sql\nname | project\n--------------\nАнна | Веб-платформа\nАнна | Мобильное приложение\nБорис | Мобильное приложение\nВера | База данных\nВера | Мобильное приложение\nГеоргий | Веб-платформа\nДина | База данных\nДина | Веб-платформа",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-08",
+      "title": "LEFT JOIN: включая строки без совпадений",
+      "description": "## LEFT JOIN\n\n`LEFT JOIN` возвращает ВСЕ строки из левой таблицы, даже если в правой нет совпадений (тогда значения правой = `NULL`):\n\n```sql\nSELECT e.name, COALESCE(SUM(a.hours), 0) AS total_hours\nFROM employees e\nLEFT JOIN assignments a ON e.id = a.employee_id\nGROUP BY e.id, e.name;\n```\n\n`COALESCE(value, default)` — заменяет `NULL` на указанное значение.\n\n**Задача:** для каждого сотрудника выведите `name` и `total_hours` (суммарные часы на проектах, для незадействованных — 0). Отсортируйте по `total_hours` по убыванию, при равенстве — по имени.",
+      "language": "sqlite",
+      "order": 7,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);\nCREATE TABLE projects (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    budget INTEGER\n);\nINSERT INTO projects VALUES\n(1, 'Мобильное приложение', 500000),\n(2, 'Веб-платформа', 300000),\n(3, 'База данных', 200000);\nCREATE TABLE assignments (\n    employee_id INTEGER,\n    project_id INTEGER,\n    hours INTEGER\n);\nINSERT INTO assignments VALUES\n(1, 1, 120),\n(1, 2, 80),\n(3, 1, 150),\n(3, 3, 60),\n(5, 2, 100),\n(5, 3, 90),\n(2, 1, 40),\n(4, 2, 50);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Выведите name и total_hours для каждого сотрудника (для незанятых — 0)\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-08-1",
+          "description": "Часы на проектах с LEFT JOIN, включая нулевые",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 8)\n\n-- solution.sql\nname | total_hours\n------------------\nВера | 210\nАнна | 200\nДина | 190\nГеоргий | 50\nБорис | 40\nЕгор | 0\nЖанна | 0",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-09",
+      "title": "Подзапросы (Subqueries)",
+      "description": "## Запрос внутри запроса\n\nПодзапрос — это `SELECT` внутри другого запроса. Может использоваться в `WHERE`, `FROM`, `SELECT`:\n\n```sql\n-- В WHERE: найдите сотрудников с зарплатой выше средней\nSELECT name\nFROM employees\nWHERE salary > (SELECT AVG(salary) FROM employees);\n```\n\n**Задача:** выведите `name` и `salary` сотрудников, чья зарплата строго выше средней по компании. Отсортируйте по зарплате по убыванию.",
+      "language": "sqlite",
+      "order": 8,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE employees (\n    id INTEGER PRIMARY KEY,\n    name TEXT,\n    department TEXT,\n    salary INTEGER,\n    age INTEGER\n);\nINSERT INTO employees VALUES\n(1, 'Анна', 'IT', 60000, 28),\n(2, 'Борис', 'HR', 65000, 35),\n(3, 'Вера', 'IT', 70000, 32),\n(4, 'Георгий', 'Финансы', 75000, 45),\n(5, 'Дина', 'IT', 80000, 27),\n(6, 'Егор', 'HR', 85000, 31),\n(7, 'Жанна', 'Финансы', 90000, 38);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- Найдите сотрудников с зарплатой выше средней (используйте подзапрос)\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-09-1",
+          "description": "Сотрудники с зарплатой выше средней (75000)",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 7)\n\n-- solution.sql\nname | salary\n-------------\nЖанна | 90000\nЕгор | 85000\nДина | 80000",
+          "isHidden": false
+        }
+      ]
+    },
+    {
+      "id": "lab-sql-10",
+      "title": "INSERT, UPDATE, DELETE",
+      "description": "## Изменение данных (DML)\n\nТри основных оператора для модификации данных:\n\n```sql\n-- Добавить строку\nINSERT INTO table (col1, col2) VALUES (val1, val2);\n\n-- Изменить строки\nUPDATE table SET col = val WHERE условие;\n\n-- Удалить строки\nDELETE FROM table WHERE условие;\n```\n\n**Внимание:** `UPDATE` и `DELETE` без `WHERE` изменят/удалят все строки!\n\n**Задача:** выполните три операции над таблицей `inventory`:\n1. Добавьте товар: `(5, 'Наушники', 30, 5000)`\n2. Обновите количество `Ноутбук` → `quantity = 5`\n3. Удалите `Мышь`\n4. Выведите `SELECT * FROM inventory ORDER BY id;`",
+      "language": "sqlite",
+      "order": 9,
+      "files": [
+        {
+          "path": "schema.sql",
+          "content": "CREATE TABLE inventory (\n    id INTEGER PRIMARY KEY,\n    item TEXT,\n    quantity INTEGER,\n    price INTEGER\n);\nINSERT INTO inventory VALUES\n(1, 'Ноутбук', 10, 50000),\n(2, 'Мышь', 100, 800),\n(3, 'Клавиатура', 50, 2000),\n(4, 'Монитор', 20, 30000);",
+          "readOnly": true
+        },
+        {
+          "path": "solution.sql",
+          "content": "-- 1. INSERT: добавьте (5, 'Наушники', 30, 5000)\n-- 2. UPDATE: quantity = 5 для 'Ноутбук'\n-- 3. DELETE: удалите 'Мышь'\n-- 4. SELECT * FROM inventory ORDER BY id;\n",
+          "readOnly": false
+        }
+      ],
+      "testCases": [
+        {
+          "id": "tc-sql-10-1",
+          "description": "Состояние таблицы после INSERT, UPDATE, DELETE",
+          "input": "",
+          "expectedOutput": "-- schema.sql\n✅ Выполнено (изменено строк: 4)\n\n-- solution.sql\nid | item | quantity | price\n----------------------------\n1 | Ноутбук | 5 | 50000\n3 | Клавиатура | 50 | 2000\n4 | Монитор | 20 | 30000\n5 | Наушники | 30 | 5000",
+          "isHidden": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - vlab-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: DecentralizedVLab/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Execution__BaseUrl=http://execution:8080
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - execution
+    networks:
+      - vlab-network
+
+  execution:
+    build:
+      context: .
+      dockerfile: ExecutionService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - vlab-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - vlab-network
+
+networks:
+  vlab-network:
+    driver: bridge
